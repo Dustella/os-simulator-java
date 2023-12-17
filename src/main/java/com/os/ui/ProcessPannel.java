@@ -69,6 +69,7 @@ public class ProcessPannel {
         blockQueuePane = contentPane2;
 
         currentProcessLabel = new JLabel("当前进程：");
+        currentProcessLabel.setFont(new java.awt.Font("微软雅黑", 1, 20));
         currentProcessLabel.setSize(100, 100);
         currentProcessLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -89,7 +90,7 @@ public class ProcessPannel {
             readyTable.addRow(row);
         });
 
-        pcbs.getWaitingQueue().forEach(pcb -> {
+        pcbs.getBlockingQueue().forEach(pcb -> {
             var row = new Object[]{pcb.getPid()};
             blockTable.addRow(row);
         });
@@ -100,6 +101,8 @@ public class ProcessPannel {
         } else {
             currentProcessLabel.setText("当前进程：");
         }
+        currentProcessLabel.setFont(new java.awt.Font("微软雅黑", 1, 20));
+
 
     }
 }

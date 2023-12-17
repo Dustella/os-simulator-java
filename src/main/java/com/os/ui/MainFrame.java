@@ -47,12 +47,11 @@ public class MainFrame extends JFrame {
         var filePane = devicePannel.getFilePane();
 
 
-        label = new JLabel("Label Text");
-
         // 创建一个表格模型
         processPannel = new ProcessPannel();
         var readyQueuePane = processPannel.getReadyQueuePane();
         var blockedQueuePane = processPannel.getBlockQueuePane();
+        label = processPannel.getCurrentProcessLabel();
 
         logTextArea = new JTextArea(10, 40);
         logTextArea.setEditable(false); // 设置为只读
@@ -88,30 +87,12 @@ public class MainFrame extends JFrame {
     // 更新列表、标签和表格内容的方法
     private void flushInfo() {
         processPannel.UpdateProcesses();
-
-        // 更新列表1的内容
-//        DefaultListModel<String> listModel1 = (DefaultListModel<String>) list1.getModel();
-//        listModel1.removeAllElements();
-//        listModel1.addElement("Item 1");
-//        listModel1.addElement("Item 2");
-//        listModel1.addElement("Item 3");
-//
-//        // 更新列表2的内容
-//        DefaultListModel<String> listModel2 = (DefaultListModel<String>) list2.getModel();
-//        listModel2.removeAllElements();
-//        listModel2.addElement("A");
-//        listModel2.addElement("B");
-//        listModel2.addElement("C");
-//
-//        // 更新标签文本
-//        label.setText("Updated Label Text");
-
-        // 更新表格内容
+        devicePannel.updateDeviceList();
+        memoryPannel.updateMemoryPages();
 
     }
 
     public void mainLoop() {
-//        setInterval
         while (true) {
             try {
                 Thread.sleep(500);
@@ -123,8 +104,12 @@ public class MainFrame extends JFrame {
         }
     }
 
+    public void log(String msg) {
+        logTextArea.append(msg + "\n");
+    }
+
     public static void main(String[] args) {
-        var example = new com.os.ui.MainFrame();
+        var example = MainFrame.getInstance();
 //        invoke later
         SwingUtilities.invokeLater(() -> {
 

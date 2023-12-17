@@ -1,10 +1,11 @@
 package com.os.core;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class ThreadManager {
 
-    private List<String> threads;
+    private List<String> threads = new LinkedList<>();
 
     public ThreadManager() {
         System.out.println("ThreadManager created");

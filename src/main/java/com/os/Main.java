@@ -7,6 +7,8 @@ import com.os.models.Process;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
@@ -21,7 +23,15 @@ public class Main {
         for (var process : processes) {
             pcbs.addToReadyQueue(process);
         }
+        os.getScheduler().setScheduleAlgorithm(new com.os.utils.FCFS());
+
+        var excutor = Executors.newSingleThreadExecutor();
+//        run a none blocking process
+        excutor.submit(() -> {
+                os.getScheduler().schedule();
+        });
 //        .addToReadyQueue();
         MainFrame.main(args);
+
     }
 }

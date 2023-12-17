@@ -28,7 +28,7 @@ public class OS {
         var scheduler = new Scheduler();
         scheduler.setScheduleAlgorithm(new RR(2));
         scheduler.schedule();
-        memoryManager = new MemoryManager(10,4);
+        memoryManager = new MemoryManager(10,2);
         threadManager = new ThreadManager();
         diskManager = new DiskManager();
         deviceManager = new DeviceManager();

@@ -75,7 +75,7 @@ public class Instuctions {
         }
 
 //        read time
-        this.time = Integer.parseInt(instructions[2].substring(0, instructions[2].length() - 1));
+        this.time = Integer.parseInt(instructions[instructions.length - 1].substring(0, instructions[instructions.length-1].length() - 1));
     }
 
 
@@ -111,9 +111,7 @@ public class Instuctions {
         switch (this.getAction()) {
             case Malloc -> {
                 int addr = memoryManager.allocate(this.getAmount());
-                if (addr == -1) {
-                    scheduler.BlockProcess(this.currentProcess, getTime());
-                }
+                currentProcess.addMemoryMapping(this.getTarget(), addr, this.getAmount());
             }
             case Free -> {
                 var location = currentProcess.getMemoryLocation(this.getTarget());
@@ -121,10 +119,11 @@ public class Instuctions {
             }
             case ReadFile -> {
                 scheduler.BlockProcess(currentProcess, getTime());
-                diskManager.readFile(this.getTarget());
+                diskManager.readFile(this.getTarget(),this.currentProcess.getPid());
             }
             case WriteFile -> {
-                diskManager.writeFile(this.getTarget());
+                scheduler.BlockProcess(currentProcess, getTime());
+                diskManager.writeFile(this.getTarget(),this.currentProcess.getPid());
             }
             case CreateThread -> {
                 threadManager.addThread(this.getTarget());
@@ -136,13 +135,24 @@ public class Instuctions {
                 scheduler.schedule();
             }
             case UseDevice -> {
-                deviceManager.useDevice(this.getTarget());
+                deviceManager.useDevice(this.getTarget(),this.currentProcess.getPid());
             }
             case ReleaseDevice -> {
                 deviceManager.releaseDevice(this.getTarget());
             }
         }
+
     }
+        public void excuteWithTime(int timing){
+//          block thread to   wait for time
+            try {
+                Thread.sleep(timing * 1000L);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            excute();
+
+        }
 
 
 }

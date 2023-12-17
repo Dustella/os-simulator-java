@@ -17,21 +17,25 @@ public class MemoryManager {
         this.pageSize = pageSize;
         this.memoryPages = new ArrayList<>();
         this.pageQueue = new LinkedList<>();
+
+        // initialize memory pages
+        for (int i = 0; i < totalMemorySize / pageSize; i++) {
+            memoryPages.add(new MemoryPage(i, pageSize));
+        }
     }
 
     public int allocate(int size) {
         int numPagesRequired = (int) Math.ceil((double) size / pageSize);
-        if (numPagesRequired > getFreePageCount()) {
-            // Not enough free pages, perform page replacement
-            performPageReplacement(numPagesRequired - getFreePageCount());
-        }
+//        if (numPagesRequired > getFreePageCount()) {
+//            // Not enough free pages, perform page replacement
+//            performPageReplacement(numPagesRequired - getFreePageCount());
+//        }
 
         int startIndex = findContiguousPages(numPagesRequired);
         if (startIndex != -1) {
             // Allocate pages
             for (int i = startIndex; i < startIndex + numPagesRequired; i++) {
-                MemoryPage page = new MemoryPage(i, pageSize);
-                memoryPages.add(i, page);
+                memoryPages.get(i).setOccupied(true);
                 pageQueue.add(i);
             }
             return startIndex * pageSize;
@@ -45,24 +49,32 @@ public class MemoryManager {
 
         // Free pages
         for (int i = startIndex; i < startIndex + numPagesToFree; i++) {
-            memoryPages.remove(i);
-            pageQueue.remove(i);
+            memoryPages.get(i).setOccupied(false);
         }
     }
 
+    public List<MemoryPage> getMemoryPages() {
+        return memoryPages;
+    }
+
     private int findContiguousPages(int numPagesRequired) {
-        int consecutiveFreePages = 0;
+        int startIndex = -1;
+        int count = 0;
         for (int i = 0; i < memoryPages.size(); i++) {
             if (!memoryPages.get(i).isOccupied()) {
-                consecutiveFreePages++;
-                if (consecutiveFreePages == numPagesRequired) {
-                    return i - numPagesRequired + 1;
+                if (startIndex == -1) {
+                    startIndex = i;
+                }
+                count++;
+                if (count == numPagesRequired) {
+                    return startIndex;
                 }
             } else {
-                consecutiveFreePages = 0;
+                startIndex = -1;
+                count = 0;
             }
         }
-        return -1; // No contiguous pages found
+        return -1;
     }
 
     private int getFreePageCount() {

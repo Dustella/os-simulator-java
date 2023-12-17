@@ -36,7 +36,7 @@ public class Scheduler {
     }
 
     public void BlockProcess(Process process, int time) {
-        PCBS.moveToWaitingQueue(process);
+        PCBS.IOBlock(process);
 
 //        wait for time
         var excutor = Executors.newScheduledThreadPool(1);

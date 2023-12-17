@@ -8,7 +8,7 @@ public class MemoryPage {
     public MemoryPage(int pageNumber, int pageSize) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
-        this.occupied = true;
+        this.occupied = false;
     }
 
     public int getPageNumber() {
@@ -25,5 +25,13 @@ public class MemoryPage {
 
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
+    }
+
+    public void setOccupied() {
+        this.occupied = true;
+    }
+
+    public void setFree() {
+        this.occupied = false;
     }
 }

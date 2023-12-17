@@ -81,6 +81,39 @@ public class DevicePannel {
     }
 
     public void updateFileList() {
+        var os = OS.getInstance();
+        var fileMan = os.getDiskManager();
+        var deviceMan = os.getDeviceManager();
+
+        var readingLs = fileMan.getCurrentReadingList();
+        var writingLs = fileMan.getCurrentWritingList();
+        var usageMap = fileMan.getUsageMap();
+
+        fileListModel.clear();
+        for (var file : readingLs) {
+            var message = "正在读取";
+            fileListModel.addElement(file + " " + message);
+        }
+
+        for (var file : writingLs) {
+            var message = "正在写入";
+            fileListModel.addElement(file + " " + message);
+        }
+
+        for (var file : usageMap.entrySet()) {
+            var message = "正在使用";
+            fileListModel.addElement(file.getKey() + " " + message);
+        }
+
+        var de = deviceMan.getDeviceMap();
+        deviceListModel.clear();
+        for (var device : de.entrySet()) {
+            var message = device.getValue()? "正在使用" : "空闲";
+            deviceListModel.addElement(device.getKey() + " " + message);
+        }
+
+
+
 //        fileListModel.clear();
 //        var os = OS.getInstance();
 //        var fileMan = os.getDiskManager();

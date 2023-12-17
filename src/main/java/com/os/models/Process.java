@@ -2,6 +2,7 @@ package com.os.models;
 
 
 import com.os.core.OS;
+import com.os.utils.Logger;
 import javafx.util.Pair;
 
 import java.util.HashMap;
@@ -95,19 +96,27 @@ public class Process {
     public ProcessResult runToDie() {
         // run the process until it is terminated
         // return Result.Done
-        for (var i = 0; i < instructions.size(); i++) {
-            var currentInstruction = instructions.get(pc);
-            var action = currentInstruction.getAction();
-            if (action == InstructionAction.ReadFile || action == InstructionAction.WriteFile) {
-                // if the process is blocked, return Result.IOBlocked
-                var osInstance = OS.getInstance();
-                var scheduler = osInstance.getScheduler();
-                scheduler.BlockProcess(this, currentInstruction.getTime());
+        Logger.log("=====================================");
+        Logger.log("Running process " + this.pid);
+        for (var currentInstruction : instructions) {
+            if (currentInstruction.isIO()) {
+                currentInstruction.excute();
                 return ProcessResult.IOBlocked;
             }
+            Logger.log("Running instruction " + currentInstruction.getAction() + " for process " + this.pid);
+            currentInstruction.excuteWithTime(currentInstruction.getTime());
+            addPc();
 
         }
         return ProcessResult.Done;
+    }
+
+    public int getMemorySize() {
+        int size = 0;
+        for (var entry : memoryMapping.entrySet()) {
+            size += entry.getValue().getValue();
+        }
+        return size;
     }
 
 
@@ -121,5 +130,9 @@ public class Process {
 
     public int getPid() {
         return this.pid;
+    }
+
+    public void addMemoryMapping(String target, int addr, int amount) {
+        memoryMapping.put(target, new Pair<>(addr, amount));
     }
 }

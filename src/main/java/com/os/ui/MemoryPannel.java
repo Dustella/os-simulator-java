@@ -1,5 +1,6 @@
 package com.os.ui;
 
+import com.os.core.OS;
 import com.os.models.MemoryPage;
 
 import javax.swing.*;
@@ -32,6 +33,16 @@ public class MemoryPannel extends JPanel {
         repaint();
     }
 
+    public void updateMemoryPages() {
+        var os = OS.getInstance();
+        var menMan = os.getMemoryManager();
+        var pages = menMan.getMemoryPages();
+        for (MemoryPage page : pages) {
+            this.memoryStatus[page.getPageNumber()] = page.isOccupied() ? 1 : 0;
+        }
+        repaint();
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -47,9 +58,6 @@ public class MemoryPannel extends JPanel {
             int cellHeight = height;
             if (memoryStatus[i] == 1) {
                 g.setColor(Color.BLUE); // 已分配状态
-                g.fillRect(x, y, cellWidth, cellHeight);
-            } else if (memoryStatus[i] == 2) {
-                g.setColor(Color.RED); // 被占用状态
                 g.fillRect(x, y, cellWidth, cellHeight);
             }
             g.setColor(Color.GREEN); // 空闲状态
