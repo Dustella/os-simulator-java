@@ -18,6 +18,8 @@ public class OS {
 
     private PipeManager pipeManager;
 
+    private DeadlockHandler deadlockHandler;
+
     public static OS getInstance() {
         if (instance == null) {
             instance = new OS();
@@ -35,6 +37,7 @@ public class OS {
         diskManager = new DiskManager();
         deviceManager = new DeviceManager();
         pipeManager = new PipeManager();
+        deadlockHandler = new DeadlockHandler();
         this.scheduler = scheduler;
     }
 
@@ -52,6 +55,10 @@ public class OS {
 
     public DiskManager getDiskManager() {
         return diskManager;
+    }
+
+    public DeadlockHandler getDeadlockHandler() {
+        return deadlockHandler;
     }
 
     public Scheduler getScheduler() {

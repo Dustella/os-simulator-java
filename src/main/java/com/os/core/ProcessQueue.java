@@ -11,21 +11,32 @@ public class ProcessQueue {
 
     private List<Process> readyQueue = new LinkedList<>();
 
-    private List<Process> blockingQueye = new LinkedList<>();
+    private List<Process> blockingQueue = new LinkedList<>();
+
+    private List<Process> preReadyProcess = new LinkedList<>();
 
     public ProcessQueue() {
     }
 
     public void addToReadyQueue(Process process) {
+        preReadyProcess.remove(process);
         readyQueue.add(process);
     }
 
+    public void addToPreReadyQueue(Process process) {
+        preReadyProcess.add(process);
+    }
+
+    public List<Process> getPreReadyProcess() {
+        return preReadyProcess;
+    }
+
     public void IOBlock(Process process) {
-        blockingQueye.add(process);
+        blockingQueue.add(process);
     }
 
     public void IOComplete(Process process) {
-        blockingQueye.remove(process);
+        blockingQueue.remove(process);
         if (process.isComplete()) {
             return;
         } else {
@@ -35,14 +46,14 @@ public class ProcessQueue {
 
     public void releaseProcess(Process process) {
         readyQueue.remove(process);
-        blockingQueye.remove(process);
+        blockingQueue.remove(process);
     }
 
     public void setCurrentProcess(Process process) {
         currentProcess = process;
         var pid = process.getPid();
         readyQueue.removeIf(p -> p.getPid() == pid);
-        blockingQueye.removeIf(p -> p.getPid() == pid);
+        blockingQueue.removeIf(p -> p.getPid() == pid);
     }
 
     public void desetCurrentProcess() {
@@ -56,7 +67,7 @@ public class ProcessQueue {
                 return process;
             }
         }
-        for (var process : blockingQueye) {
+        for (var process : blockingQueue) {
             if (process.getPid() == pid) {
                 return process;
             }
@@ -68,14 +79,14 @@ public class ProcessQueue {
         if (readyQueue.size() > 0) {
             return readyQueue.get(0);
         }
-        if (blockingQueye.size() > 0) {
-            return blockingQueye.get(0);
+        if (blockingQueue.size() > 0) {
+            return blockingQueue.get(0);
         }
         return null;
     }
 
     public boolean isEmpty() {
-        return readyQueue.isEmpty() && blockingQueye.isEmpty();
+        return readyQueue.isEmpty() && blockingQueue.isEmpty();
     }
 
     public List<Process> getReadyQueue() {
@@ -83,7 +94,7 @@ public class ProcessQueue {
     }
 
     public List<Process> getBlockingQueue() {
-        return blockingQueye;
+        return blockingQueue;
     }
 
     public Process getCurrentProcess() {

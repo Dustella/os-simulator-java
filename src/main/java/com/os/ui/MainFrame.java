@@ -28,6 +28,8 @@ public class MainFrame extends JFrame {
 
     private DevicePannel devicePannel;
 
+    private BankVisual bankVisual;
+
     public MainFrame() {
         setTitle("OS 模拟器");
         setSize(1300, 700);
@@ -44,11 +46,16 @@ public class MainFrame extends JFrame {
         devicePannel = new DevicePannel();
         var devicePane = devicePannel.getDevicePane();
         var filePane = devicePannel.getFilePane();
+        bankVisual = new BankVisual();
+        bankVisual.initFakeData();
+
+        var bankPane = bankVisual.getResult();
 
         // 创建一个表格模型
         processPannel = new ProcessPannel();
         var readyQueuePane = processPannel.getReadyQueuePane();
         var blockedQueuePane = processPannel.getBlockQueuePane();
+        var preReadyPane = processPannel.getPreReadyPane();
         label = processPannel.getCurrentProcessLabel();
 
         logTextArea = new JTextArea(10, 40);
@@ -61,17 +68,19 @@ public class MainFrame extends JFrame {
 
         // 添加控件到窗口
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 2));
+        panel.setLayout(new GridLayout(2, 3));
+        panel.add(preReadyPane);
         panel.add(blockedQueuePane);
         panel.add(readyQueuePane);
         panel.add(devicePane);
         panel.add(filePane);
+        panel.add(bankPane);
 
         memoryPannel = new MemoryPannel();
 
         Random random = new Random();
-        int[] memoryStatus = new int[10];
-        for (int i = 0; i < 10; i++) {
+        int[] memoryStatus = new int[12];
+        for (int i = 0; i < 12; i++) {
             memoryStatus[i] = random.nextInt(2); // 随机状态，例如：0表示空闲，1表示已分配，2表示被占用
         }
         memoryPannel.setMemoryStatus(memoryStatus);
@@ -87,6 +96,7 @@ public class MainFrame extends JFrame {
         processPannel.UpdateProcesses();
         devicePannel.updateDeviceList();
         memoryPannel.updateMemoryPages();
+        bankVisual.updateData();
 
     }
 

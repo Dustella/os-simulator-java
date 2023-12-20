@@ -7,6 +7,8 @@ import java.util.concurrent.Executors;
 
 public class Scheduler {
 
+    public static String mode;
+
     private SchedulingAlgorithm currentAlgorithm;
 
     private ProcessQueue PCBS = new ProcessQueue();
@@ -38,13 +40,11 @@ public class Scheduler {
     public void BlockProcess(Process process, int time) {
         PCBS.IOBlock(process);
 
-//        wait for time
+        // wait for time
         var excutor = Executors.newScheduledThreadPool(1);
         excutor.schedule(() -> {
             PCBS.IOComplete(process);
         }, time, java.util.concurrent.TimeUnit.SECONDS);
     }
-
-
 
 }

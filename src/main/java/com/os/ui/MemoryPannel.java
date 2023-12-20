@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MemoryPannel extends JPanel {
 
-    public static final int PAGE_COUNT = 9;
+    public static final int PAGE_COUNT = 12;
     private int[] memoryStatus;
 
     public MemoryPannel() {

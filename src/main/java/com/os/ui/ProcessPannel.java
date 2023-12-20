@@ -1,12 +1,12 @@
 package com.os.ui;
 
 import com.os.core.OS;
+import com.os.core.Scheduler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class ProcessPannel {
-
 
     private DefaultTableModel readyTable;
 
@@ -18,6 +18,8 @@ public class ProcessPannel {
     private JPanel readyQueuePane;
 
     private JPanel blockQueuePane;
+
+    private JPanel preReadyPane;
 
     private JLabel currentProcessLabel;
 
@@ -33,6 +35,9 @@ public class ProcessPannel {
         return currentProcessLabel;
     }
 
+    public JPanel getPreReadyPane() {
+        return preReadyPane;
+    }
 
     public ProcessPannel() {
         // 创建一个表格模型
@@ -43,7 +48,7 @@ public class ProcessPannel {
         var tableScrollPane = new JScrollPane(readyQue);
 
         JPanel contentPane = new JPanel();
-//        add title
+        // add title
         JLabel label = new JLabel("就绪队列");
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         contentPane.add(label);
@@ -68,41 +73,58 @@ public class ProcessPannel {
 
         blockQueuePane = contentPane2;
 
+        // 创建一个表格模型
+        var preReadyTable = new DefaultTableModel();
+        preReadyTable.addColumn("PID");
+
+        var preReadyQue = new JTable(preReadyTable);
+        var tableScrollPane3 = new JScrollPane(preReadyQue);
+
+        JPanel contentPane3 = new JPanel();
+
+        JLabel label3 = new JLabel("即将加入的进程队列");
+
+        contentPane3.setLayout(new BoxLayout(contentPane3, BoxLayout.Y_AXIS));
+        contentPane3.add(label3);
+        contentPane3.add(tableScrollPane3);
+
+        preReadyPane = contentPane3;
+
         currentProcessLabel = new JLabel("当前进程：");
         currentProcessLabel.setFont(new java.awt.Font("微软雅黑", 1, 20));
         currentProcessLabel.setSize(100, 100);
         currentProcessLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-
     }
 
-    public void UpdateProcesses(){
+    public void UpdateProcesses() {
         var os = OS.getInstance();
         var scheduler = os.getScheduler();
         var pcbs = scheduler.getPCBS();
 
-//        clear table
+        // clear table
         readyTable.setRowCount(0);
         blockTable.setRowCount(0);
 
         pcbs.getReadyQueue().forEach(pcb -> {
-            var row = new Object[]{pcb.getPid()};
+            var row = new Object[] { pcb.getPid() };
             readyTable.addRow(row);
         });
 
         pcbs.getBlockingQueue().forEach(pcb -> {
-            var row = new Object[]{pcb.getPid()};
+            var row = new Object[] { pcb.getPid() };
             blockTable.addRow(row);
         });
 
-        var process  = pcbs.getCurrentProcess();
+        String out;
+        var process = pcbs.getCurrentProcess();
         if (process != null) {
-            currentProcessLabel.setText("当前进程：" + process.getPid());
+            out = "正在执行：" + Scheduler.mode + "，当前进程：" + process.getPid();
         } else {
-            currentProcessLabel.setText("当前进程：");
+            out = "当前无进程";
         }
+        currentProcessLabel.setText(out);
         currentProcessLabel.setFont(new java.awt.Font("微软雅黑", 1, 20));
-
 
     }
 }
