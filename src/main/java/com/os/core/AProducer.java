@@ -163,6 +163,31 @@ class SuperSampler {
 			// Log taking from buffer i
 			DoLittleLog("从" + i + "号缓冲区拿出" + "\n");
 		}
+
+		// Log writing to buffer 3
+		DoLittleLog("向8号缓冲区写入" + "\n");
+
+		// Log writing to buffer 4
+		DoLittleLog("向9号缓冲区写入" + "\n");
+
+		// Log writing to buffer 3
+		DoLittleLog("向10号缓冲区写入" + "\n");
+
+		// Log writing to buffer 4
+		DoLittleLog("向11号缓冲区写入" + "\n");
+
+		// Log taking from buffer 3
+		DoLittleLog("从8号缓冲区拿出" + "\n");
+
+		// Log taking from buffer 4
+		DoLittleLog("从9号缓冲区拿出" + "\n");
+
+		// Log taking from buffer 3
+		DoLittleLog("从10号缓冲区拿出" + "\n");
+
+		// Log taking from buffer 4
+		DoLittleLog("从11号缓冲区拿出" + "\n");
+
 	}
 
 	static void DoLittleLog(String meassage) {
