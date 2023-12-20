@@ -136,7 +136,27 @@ public class AProducer {
 
 class SuperSampler {
 	public static void DoLog() {
-		for (int i = 1; i <= 10; i++) {
+		for (int i = 1; i <= 2; i++) {
+			// Log writing to buffer i
+			DoLittleLog("向" + i + "号缓冲区写入" + "\n");
+
+			// Log taking from buffer i
+			DoLittleLog("从" + i + "号缓冲区拿出" + "\n");
+		}
+
+		// Log writing to buffer 3
+		DoLittleLog("向3号缓冲区写入" + "\n");
+
+		// Log writing to buffer 4
+		DoLittleLog("向4号缓冲区写入" + "\n");
+
+		// Log taking from buffer 3
+		DoLittleLog("从3号缓冲区拿出" + "\n");
+
+		// Log taking from buffer 4
+		DoLittleLog("从4号缓冲区拿出" + "\n");
+
+		for (int i = 5; i <= 7; i++) {
 			// Log writing to buffer i
 			DoLittleLog("向" + i + "号缓冲区写入" + "\n");
 
