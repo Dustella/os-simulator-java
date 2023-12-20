@@ -34,6 +34,8 @@ public class MainFrame extends JFrame {
 
     private BankVisual bankVisual;
 
+    private JTextArea loggerForPordu;
+
     public MainFrame() {
         setTitle("OS 模拟器");
         setSize(1300, 700);
@@ -50,6 +52,9 @@ public class MainFrame extends JFrame {
         devicePannel = new DevicePannel();
         var devicePane = devicePannel.getDevicePane();
         var filePane = devicePannel.getFilePane();
+        var threadPane = devicePannel.getThreadPane();
+        loggerForPordu = devicePannel.getLoggerForPordu();
+
         bankVisual = new BankVisual();
         bankVisual.initFakeData();
 
@@ -65,6 +70,7 @@ public class MainFrame extends JFrame {
         logTextArea = new JTextArea(10, 40);
         logTextArea.setEditable(false); // 设置为只读
         JScrollPane logScrollPane = new JScrollPane(logTextArea);
+        JScrollPane loggerForProdJScrollPane = new JScrollPane(loggerForPordu);
 
         // 创建一个按钮，用于更新控件内容
         JButton updateButton = new JButton("Update");
@@ -72,13 +78,15 @@ public class MainFrame extends JFrame {
 
         // 添加控件到窗口
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 3));
+        panel.setLayout(new GridLayout(2, 4));
         panel.add(preReadyPane);
         panel.add(blockedQueuePane);
         panel.add(readyQueuePane);
+        panel.add(threadPane);
         panel.add(devicePane);
         panel.add(filePane);
         panel.add(bankPane);
+        panel.add(loggerForProdJScrollPane);
 
         memoryPannel = new MemoryPannel();
 
@@ -100,6 +108,7 @@ public class MainFrame extends JFrame {
         processPannel.UpdateProcesses();
         devicePannel.updateDeviceList();
         devicePannel.updateFileList();
+        devicePannel.updateThreadList();
 
         memoryPannel.updateMemoryPages();
         bankVisual.updateData();
@@ -120,6 +129,10 @@ public class MainFrame extends JFrame {
 
     public void log(String msg) {
         logTextArea.append(msg + "\n");
+    }
+
+    public void logForProdu(String msg) {
+        loggerForPordu.append(msg + "n");
     }
 
     public static void main() {

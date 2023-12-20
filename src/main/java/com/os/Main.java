@@ -1,5 +1,6 @@
 package com.os;
 
+import com.os.core.AProducer;
 import com.os.core.OS;
 import com.os.core.Scheduler;
 import com.os.ui.MainFrame;
@@ -54,6 +55,7 @@ public class Main {
 
         var excutor = Executors.newSingleThreadExecutor();
         var bankerExcuter = Executors.newSingleThreadExecutor();
+        var dummyExcutor = Executors.newSingleThreadExecutor();
         // run a none blocking process
         // .addToReadyQueue();
         bankerExcuter.submit(() -> {
@@ -62,6 +64,10 @@ public class Main {
         excutor.submit(() -> {
             os.getScheduler().schedule();
         });
+        dummyExcutor.submit(() -> {
+            AProducer.loooooog();
+        });
+
         MainFrame.main();
 
     }

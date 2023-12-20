@@ -11,12 +11,19 @@ public class DevicePannel {
 
     private DefaultListModel<String> fileListModel;
 
+    private DefaultListModel<String> threadModel;
+
+    private JTextArea loggerForPordu;
+
     private JList<String> pipeList;
     private JList<String> fileList;
+    private JList<String> threadList;
 
     private JPanel devicePane;
 
     private JPanel filePane;
+
+    private JPanel threadPane;
 
     public DevicePannel() {
         pipeListModel = new DefaultListModel<>();
@@ -47,9 +54,35 @@ public class DevicePannel {
         _filePane.add(label2);
         _filePane.add(listScrollPane2);
 
+        threadModel = new DefaultListModel<>();
+        threadList = new JList<>(threadModel);
+        JScrollPane listScrollPane3 = new JScrollPane(threadList);
+
+        JPanel _threadPane = new JPanel();
+        JLabel label3 = new JLabel("线程");
+        label3.setFont(new java.awt.Font("微软雅黑", 1, 20));
+        label3.setHorizontalAlignment(SwingConstants.CENTER);
+        label3.setSize(800, 100);
+
+        _threadPane.setLayout(new BoxLayout(_threadPane, BoxLayout.Y_AXIS));
+        _threadPane.add(label3);
+        _threadPane.add(listScrollPane3);
+
+        loggerForPordu = new JTextArea(10, 20);
+        loggerForPordu.setEditable(false); // 设置为只读
+
+        threadPane = _threadPane;
         devicePane = _pipePane;
         filePane = _filePane;
 
+    }
+
+    public JTextArea getLoggerForPordu() {
+        return loggerForPordu;
+    }
+
+    public JPanel getThreadPane() {
+        return threadPane;
     }
 
     public JPanel getDevicePane() {
@@ -68,6 +101,17 @@ public class DevicePannel {
 
         for (String line : info) {
             pipeListModel.addElement(line);
+        }
+    }
+
+    public void updateThreadList() {
+        var os = OS.getInstance();
+        var threadMan = os.getThreadManager();
+        var entrys = threadMan.getStatus();
+
+        threadModel.clear();
+        for (var entry : entrys) {
+            threadModel.addElement(entry);
         }
     }
 
