@@ -11,9 +11,14 @@ public class ProcessPannel {
     private DefaultTableModel readyTable;
 
     private DefaultTableModel blockTable;
+
+    private DefaultTableModel preReadyTable;
+
     private JTable readyQue;
 
     private JTable blockQue;
+
+    private JTable preReadyQue;
 
     private JPanel readyQueuePane;
 
@@ -74,10 +79,10 @@ public class ProcessPannel {
         blockQueuePane = contentPane2;
 
         // 创建一个表格模型
-        var preReadyTable = new DefaultTableModel();
+        preReadyTable = new DefaultTableModel();
         preReadyTable.addColumn("PID");
 
-        var preReadyQue = new JTable(preReadyTable);
+        preReadyQue = new JTable(preReadyTable);
         var tableScrollPane3 = new JScrollPane(preReadyQue);
 
         JPanel contentPane3 = new JPanel();
@@ -105,6 +110,7 @@ public class ProcessPannel {
         // clear table
         readyTable.setRowCount(0);
         blockTable.setRowCount(0);
+        preReadyTable.setRowCount(0);
 
         pcbs.getReadyQueue().forEach(pcb -> {
             var row = new Object[] { pcb.getPid() };
@@ -114,6 +120,11 @@ public class ProcessPannel {
         pcbs.getBlockingQueue().forEach(pcb -> {
             var row = new Object[] { pcb.getPid() };
             blockTable.addRow(row);
+        });
+
+        pcbs.getPreReadyProcess().forEach(pcb -> {
+            var row = new Object[] { pcb.getPid() };
+            preReadyTable.addRow(row);
         });
 
         String out;

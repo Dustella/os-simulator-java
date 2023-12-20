@@ -28,7 +28,7 @@ public class DeadlockHandler {
                 var excuter = Executors.newScheduledThreadPool(1);
                 excuter.schedule(() -> {
                     isSafe = true;
-                }, 2000, null);
+                }, 4000, null);
 
             }
 

@@ -74,33 +74,19 @@ public class DevicePannel {
     public void updateFileList() {
         var os = OS.getInstance();
         var fileMan = os.getDiskManager();
-        var deviceMan = os.getDeviceManager();
+        var pipMan = os.getPipeManager();
 
-        var readingLs = fileMan.getCurrentReadingList();
-        var writingLs = fileMan.getCurrentWritingList();
-        var usageMap = fileMan.getUsageMap();
+        var fileStatus = fileMan.getStatus();
 
         fileListModel.clear();
-        for (var file : readingLs) {
-            var message = "正在读取";
-            fileListModel.addElement(file + " " + message);
+        for (var file : fileStatus) {
+            fileListModel.addElement(file);
         }
 
-        for (var file : writingLs) {
-            var message = "正在写入";
-            fileListModel.addElement(file + " " + message);
-        }
-
-        for (var file : usageMap.entrySet()) {
-            var message = "正在使用";
-            fileListModel.addElement(file.getKey() + " " + message);
-        }
-
-        var de = deviceMan.getDeviceMap();
+        var de = pipMan.getStatus();
         pipeListModel.clear();
-        for (var device : de.entrySet()) {
-            var message = device.getValue() ? "正在使用" : "空闲";
-            pipeListModel.addElement(device.getKey() + " " + message);
+        for (var device : de) {
+            pipeListModel.addElement(device);
         }
 
         // fileListModel.clear();

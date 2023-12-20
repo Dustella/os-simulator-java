@@ -156,6 +156,15 @@ public class Instuctions {
             case ReleaseDevice -> {
                 deviceManager.releaseDevice(this.getTarget());
             }
+            case CreatePipe -> {
+                OS.getInstance().getPipeManager().createPipe(this.getTarget());
+            }
+            case WritePipe -> {
+                OS.getInstance().getPipeManager().writePipe(this.getTarget());
+            }
+            case ReadPipe -> {
+                OS.getInstance().getPipeManager().readPipe(this.getTarget());
+            }
         }
 
     }

@@ -32,10 +32,13 @@ public class Main {
 
         System.out.println("正在启动......");
 
+        var programs = Programs.getInstance();
+        var processes = programs.parse();
+
         var os = OS.getInstance();
         var pcbs = os.getScheduler().getPCBS();
-        var programs = new Programs();
-        var processes = programs.parse();
+        var firstProcess = processes.remove(0);
+        pcbs.addToReadyQueue(firstProcess);
         for (var process : processes) {
             pcbs.addToPreReadyQueue(process);
         }
@@ -44,11 +47,11 @@ public class Main {
         var excutor = Executors.newSingleThreadExecutor();
         var bankerExcuter = Executors.newSingleThreadExecutor();
         // run a none blocking process
-        excutor.submit(() -> {
-            os.getScheduler().schedule();
-        });
         bankerExcuter.submit(() -> {
             os.getDeadlockHandler().DoLoop();
+        });
+        excutor.submit(() -> {
+            os.getScheduler().schedule();
         });
         // .addToReadyQueue();
         MainFrame.main(args);

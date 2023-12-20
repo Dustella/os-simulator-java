@@ -25,7 +25,7 @@ public class BankVisual {
         Object[][] data = {
         };
         bankTable = new DefaultTableModel(data, columnNames);
-        JTable table = new JTable();
+        var table = new JTable(bankTable);
 
         // Create a title
         JLabel titleLabel = new JLabel("银行家算法状态");
@@ -52,7 +52,7 @@ public class BankVisual {
         var os = OS.getInstance();
         var schedular = os.getScheduler();
         var pcbs = schedular.getPCBS();
-        var readyQueue = pcbs.getReadyQueue();
+        var readyQueue = pcbs.getPreReadyProcess();
         for (var p : readyQueue) {
             var pid = p.getPid();
             // random gen memory 0-3

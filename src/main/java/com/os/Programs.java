@@ -16,6 +16,15 @@ public class Programs {
     // createthread newname 1s
     // killthread newname 1s
     // usedevice printer 1s
+    static Programs _instance = null;
+
+    public static Programs getInstance() {
+        if (_instance == null) {
+            _instance = new Programs();
+        }
+        return _instance;
+    }
+
     private List<List<String>> programs = new ArrayList<>();
 
     private List<Process> result;
@@ -114,7 +123,7 @@ public class Programs {
     }
 
     public List<String> getAllFiles() {
-        var files = new ArrayList<String>();
+        var files = new HashSet<String>();
         for (var p : result) {
             for (var action : p.getInstructions()) {
                 if (action.getAction() == InstructionAction.ReadFile
@@ -123,12 +132,12 @@ public class Programs {
                 }
             }
         }
-        return files;
+        return new ArrayList<>(files);
     }
 
     public List<String> getAllThreads() {
 
-        var threads = new ArrayList<String>();
+        var threads = new HashSet<String>();
         for (var p : result) {
             for (var action : p.getInstructions()) {
                 if (action.getAction() == InstructionAction.CreateThread
@@ -138,7 +147,21 @@ public class Programs {
             }
         }
 
-        return threads;
+        return new ArrayList<>(threads);
 
+    }
+
+    public List<String> getAllPipes() {
+        var pipes = new HashSet<String>();
+        for (var p : result) {
+            for (var action : p.getInstructions()) {
+                if (action.getAction() == InstructionAction.CreatePipe
+                        || action.getAction() == InstructionAction.WritePipe
+                        || action.getAction() == InstructionAction.ReadPipe) {
+                    pipes.add(action.getTarget());
+                }
+            }
+        }
+        return new ArrayList<>(pipes);
     }
 }

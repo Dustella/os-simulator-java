@@ -95,6 +95,8 @@ public class MainFrame extends JFrame {
     private void flushInfo() {
         processPannel.UpdateProcesses();
         devicePannel.updateDeviceList();
+        devicePannel.updateFileList();
+
         memoryPannel.updateMemoryPages();
         bankVisual.updateData();
 

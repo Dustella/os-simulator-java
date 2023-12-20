@@ -4,6 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import com.os.Programs;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,10 +16,17 @@ public class DiskManager {
 
     private List<String> currentWritingList = new LinkedList<>();
 
-    private Map<String,Integer> usageMap = new HashMap<>();
+    private List<String> allFiles = new LinkedList<>();
+
+    private Map<String, Integer> usageMap = new HashMap<>();
 
     public DiskManager() {
         System.out.println("MemoryManager created");
+        var res = Programs.getInstance().getAllFiles();
+        for (var file : res) {
+            allFiles.add(file);
+        }
+
     }
 
     public void readFile(String address, int PID) {
@@ -34,7 +44,7 @@ public class DiskManager {
 
     }
 
-    public void writeFile(String address,int PID) {
+    public void writeFile(String address, int PID) {
         System.out.println("Writing to address: " + address);
         currentWritingList.add(address);
         usageMap.put(address, PID);
@@ -54,7 +64,21 @@ public class DiskManager {
         return currentWritingList;
     }
 
-    public Map<String,Integer> getUsageMap() {
+    public Map<String, Integer> getUsageMap() {
         return usageMap;
+    }
+
+    public List<String> getStatus() {
+        List<String> result = new LinkedList<>();
+        for (var file : allFiles) {
+            if (currentReadingList.contains(file)) {
+                result.add(file + " is being read by " + usageMap.get(file));
+            } else if (currentWritingList.contains(file)) {
+                result.add(file + " is being written by " + usageMap.get(file));
+            } else {
+                result.add(file + " is not used");
+            }
+        }
+        return result;
     }
 }

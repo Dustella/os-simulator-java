@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.os.Programs;
+
 import javafx.util.Pair;
 
 public class PipeManager {
@@ -15,6 +17,11 @@ public class PipeManager {
 
     public Map<String, Pair<List<String>, List<String>>> getPipeMapping() {
         return pipeMapping;
+    }
+
+    public PipeManager() {
+        var programs = Programs.getInstance();
+        allPipes = programs.getAllPipes();
     }
 
     public void createPipe(String name) {
