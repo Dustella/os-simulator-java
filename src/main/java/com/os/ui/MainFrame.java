@@ -8,13 +8,17 @@ import java.util.Random;
 
 public class MainFrame extends JFrame {
 
-    public static MainFrame mainFrame;
+    private volatile static MainFrame instance;
 
     public static MainFrame getInstance() {
-        if (mainFrame == null) {
-            mainFrame = new MainFrame();
+        if (instance == null) {
+            synchronized (MainFrame.class) {
+                if (instance == null) {
+                    instance = new MainFrame();
+                }
+            }
         }
-        return mainFrame;
+        return instance;
     }
 
     private JList<String> list1;
@@ -118,7 +122,7 @@ public class MainFrame extends JFrame {
         logTextArea.append(msg + "\n");
     }
 
-    public static void main(String[] args) {
+    public static void main() {
         var example = MainFrame.getInstance();
         // invoke later
         SwingUtilities.invokeLater(() -> {

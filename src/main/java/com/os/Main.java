@@ -3,6 +3,10 @@ package com.os;
 import com.os.core.OS;
 import com.os.core.Scheduler;
 import com.os.ui.MainFrame;
+import com.os.utils.FCFS;
+import com.os.utils.SJF;
+import com.os.utils.SchedulingAlgorithm;
+
 import java.util.concurrent.Executors;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
@@ -19,12 +23,16 @@ public class Main {
         // read a line
         var line = scanner.nextLine();
 
+        SchedulingAlgorithm alg = null;
+
         if (line.equals("1")) {
             System.out.println("你选择了先来先执行算法");
             Scheduler.mode = "先来先执行算法";
+            alg = new FCFS();
         } else if (line.equals("2")) {
             System.out.println("你选择了短作业优先算法");
             Scheduler.mode = "短作业优先算法";
+            alg = new SJF();
         } else {
             System.out.println("你选择了默认算法 先来先执行算法");
         }
@@ -42,19 +50,19 @@ public class Main {
         for (var process : processes) {
             pcbs.addToPreReadyQueue(process);
         }
-        os.getScheduler().setScheduleAlgorithm(new com.os.utils.FCFS());
+        os.getScheduler().setScheduleAlgorithm(alg);
 
         var excutor = Executors.newSingleThreadExecutor();
         var bankerExcuter = Executors.newSingleThreadExecutor();
         // run a none blocking process
+        // .addToReadyQueue();
         bankerExcuter.submit(() -> {
             os.getDeadlockHandler().DoLoop();
         });
         excutor.submit(() -> {
             os.getScheduler().schedule();
         });
-        // .addToReadyQueue();
-        MainFrame.main(args);
+        MainFrame.main();
 
     }
 }
