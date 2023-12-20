@@ -1,4 +1,5 @@
 package com.os.core;
+
 import com.os.models.MemoryPage;
 
 import java.util.ArrayList;
@@ -26,10 +27,10 @@ public class MemoryManager {
 
     public int allocate(int size) {
         int numPagesRequired = (int) Math.ceil((double) size / pageSize);
-//        if (numPagesRequired > getFreePageCount()) {
-//            // Not enough free pages, perform page replacement
-//            performPageReplacement(numPagesRequired - getFreePageCount());
-//        }
+        // if (numPagesRequired > getFreePageCount()) {
+        // // Not enough free pages, perform page replacement
+        // performPageReplacement(numPagesRequired - getFreePageCount());
+        // }
 
         int startIndex = findContiguousPages(numPagesRequired);
         if (startIndex != -1) {
@@ -88,6 +89,5 @@ public class MemoryManager {
         }
     }
 
-
-//
+    //
 }

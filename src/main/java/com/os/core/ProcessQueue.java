@@ -13,7 +13,6 @@ public class ProcessQueue {
 
     private List<Process> blockingQueye = new LinkedList<>();
 
-
     public ProcessQueue() {
     }
 
@@ -27,7 +26,11 @@ public class ProcessQueue {
 
     public void IOComplete(Process process) {
         blockingQueye.remove(process);
-        readyQueue.add(process);
+        if (process.isComplete()) {
+            return;
+        } else {
+            readyQueue.add(process);
+        }
     }
 
     public void releaseProcess(Process process) {
@@ -71,7 +74,7 @@ public class ProcessQueue {
         return null;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return readyQueue.isEmpty() && blockingQueye.isEmpty();
     }
 

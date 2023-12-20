@@ -1,5 +1,6 @@
 package com.os;
 
+import com.os.models.InstructionAction;
 import com.os.models.Instuctions;
 import com.os.models.Process;
 
@@ -7,25 +8,26 @@ import java.util.*;
 
 public class Programs {
 
-
     // examples of instuctions:
-//    malloc var 100 1s
-//    free var 100 1s
-//    readfile aa.txt 1s
-//    writefile aa.txt 1s
-//    createthread newname 1s
-//    killthread newname 1s
-//        usedevice printer 1s
+    // malloc var 100 1s
+    // free var 100 1s
+    // readfile aa.txt 1s
+    // writefile aa.txt 1s
+    // createthread newname 1s
+    // killthread newname 1s
+    // usedevice printer 1s
     private List<List<String>> programs = new ArrayList<>();
+
+    private List<Process> result;
 
     public Programs() {
         loadExamples();
     }
 
-    private  List<String> parseProgram(String program){
+    private List<String> parseProgram(String program) {
         var result = new ArrayList<String>();
-        for(var line:program.split("\n")){
-            if(!line.trim().isEmpty()){
+        for (var line : program.split("\n")) {
+            if (!line.trim().isEmpty()) {
                 result.add(line.trim());
             }
         }
@@ -33,13 +35,22 @@ public class Programs {
     }
 
     private void loadExamples() {
-        var p1 = """
-                malloc var 2 2s
-                free var 2 2s
+        List<String> programsRaw = new ArrayList<String>();
+        var p0 = """
+                createpipe pipe1 2s
+                createpipe pipe3 2s
+                writepipe pipe1 content 2s
+                readpipe pipe1 2s
                 """;
-        var p2 = """              
-                malloc var 2 2s
-                free var 2 2s
+
+        var p1 = """
+                createpipe pipe3 2s
+                malloc var 6 2s
+                free var 6 2s
+                """;
+        var p2 = """
+                malloc var 6 2s
+                free var 6 2s
                 """;
         var p3 = """
                 usedevice printer 2s
@@ -59,50 +70,75 @@ public class Programs {
                 malloc var 2 2s
                 free var 2 2s
                 """;
+        programsRaw.add(p0);
+        programsRaw.add(p1);
+        programsRaw.add(p2);
+        programsRaw.add(p3);
+        programsRaw.add(p4);
+        programsRaw.add(p5);
+        programsRaw.add(p6);
 
-//        flush into programs
-//        split by \n and trim
-        var p1List = parseProgram(p1);
-        var p2List = parseProgram(p2);
-        var p3List = parseProgram(p3);
-        var p4List = parseProgram(p4);
-        var p5List = parseProgram(p5);
-        var p6List = parseProgram(p6);
+        for (var lines : programsRaw) {
+            var list = parseProgram(lines);
+            programs.add(list);
+        }
 
-
-
-        programs.add(p1List);
-        programs.add(p2List);
-        programs.add(p3List);
-        programs.add(p4List);
-        programs.add(p5List);
-        programs.add(p6List);
     }
 
-    public List<Process> parse(){
+    public List<Process> parse() {
         var result = new ArrayList<Process>();
         var pids = new HashSet<Integer>();
         for (var program : programs) {
-//             assemble a process
+            // assemble a process
             Random random = new Random();
             var pid = random.nextInt(100);
-            while(pids.contains(pid)){
+            while (pids.contains(pid)) {
                 pid = random.nextInt(100);
             }
             pids.add(pid);
             var process = new Process(pid);
-            process.setName("Process "+pid);
+            process.setName("Process " + pid);
             List<Instuctions> insts = new ArrayList<Instuctions>();
-            for(var line:program){
+            for (var line : program) {
                 if (line.trim().isEmpty()) {
                     continue;
                 }
-                var inst =new  Instuctions(line);
+                var inst = new Instuctions(line);
                 insts.add(inst);
             }
             process.setInstructions(insts);
             result.add(process);
         }
+        this.result = result;
         return result;
+    }
+
+    public List<String> getAllFiles() {
+        var files = new ArrayList<String>();
+        for (var p : result) {
+            for (var action : p.getInstructions()) {
+                if (action.getAction() == InstructionAction.ReadFile
+                        || action.getAction() == InstructionAction.WriteFile) {
+                    files.add(action.getTarget());
+                }
+            }
+        }
+        return files;
+    }
+
+    public List<String> getAllThreads() {
+
+        var threads = new ArrayList<String>();
+        for (var p : result) {
+            for (var action : p.getInstructions()) {
+                if (action.getAction() == InstructionAction.CreateThread
+                        || action.getAction() == InstructionAction.KillThread) {
+                    threads.add(action.getTarget());
+                }
+            }
+        }
+
+        return threads;
+
     }
 }

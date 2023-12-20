@@ -7,7 +7,6 @@ public class FCFS implements SchedulingAlgorithm {
 
     @Override
     public void Schedule(ProcessQueue queue) {
-        int time = 0;
         while (!queue.isEmpty()) {
             Logger.log("Doing FCFS");
             var process = queue.getRandProcess();

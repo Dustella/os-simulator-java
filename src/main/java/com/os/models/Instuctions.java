@@ -1,6 +1,5 @@
 package com.os.models;
 
-
 import com.os.core.OS;
 import com.os.models.InstructionAction;
 import com.os.models.Process;
@@ -8,7 +7,6 @@ import com.os.models.Process;
 public class Instuctions {
 
     private InstructionAction instructionAction;
-
 
     private int time;
 
@@ -18,6 +16,7 @@ public class Instuctions {
 
     private String target;
 
+    private String content;
 
     public void setCurrentProcess(Process currentProcess) {
         this.currentProcess = currentProcess;
@@ -25,14 +24,14 @@ public class Instuctions {
 
     public Instuctions(String instruction) {
         // examples of instuctions:
-//    malloc var 100 1s
-//    free var 100 1s
-//    readfile aa.txt 1s
-//    writefile aa.txt 1s
-//    createthread newname 1s
-//    killthread newname 1s
-//        usedevice printer 1s
-        //releasedevice printer 1s
+        // malloc var 100 1s
+        // free var 100 1s
+        // readfile aa.txt 1s
+        // writefile aa.txt 1s
+        // createthread newname 1s
+        // killthread newname 1s
+        // usedevice printer 1s
+        // releasedevice printer 1s
         var instructions = instruction.split(" ");
         String action = instructions[0];
         switch (action) {
@@ -71,13 +70,26 @@ public class Instuctions {
                 this.instructionAction = InstructionAction.ReleaseDevice;
                 this.target = instructions[1];
             }
+            case "createpipe" -> {
+                this.instructionAction = InstructionAction.CreatePipe;
+                this.target = instructions[1];
+            }
+            case "writepipe" -> {
+                this.instructionAction = InstructionAction.WritePipe;
+                this.target = instructions[1];
+                this.content = instructions[2];
+            }
+            case "readpipe" -> {
+                this.instructionAction = InstructionAction.ReadPipe;
+                this.target = instructions[1];
+            }
             default -> throw new RuntimeException("Invalid instruction");
         }
 
-//        read time
-        this.time = Integer.parseInt(instructions[instructions.length - 1].substring(0, instructions[instructions.length-1].length() - 1));
+        // read time
+        this.time = Integer.parseInt(
+                instructions[instructions.length - 1].substring(0, instructions[instructions.length - 1].length() - 1));
     }
-
 
     public boolean isIO() {
         return instructionAction == InstructionAction.ReadFile || instructionAction == InstructionAction.WriteFile;
@@ -85,6 +97,10 @@ public class Instuctions {
 
     public InstructionAction getAction() {
         return instructionAction;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     public int getTime() {
@@ -119,11 +135,11 @@ public class Instuctions {
             }
             case ReadFile -> {
                 scheduler.BlockProcess(currentProcess, getTime());
-                diskManager.readFile(this.getTarget(),this.currentProcess.getPid());
+                diskManager.readFile(this.getTarget(), this.currentProcess.getPid());
             }
             case WriteFile -> {
                 scheduler.BlockProcess(currentProcess, getTime());
-                diskManager.writeFile(this.getTarget(),this.currentProcess.getPid());
+                diskManager.writeFile(this.getTarget(), this.currentProcess.getPid());
             }
             case CreateThread -> {
                 threadManager.addThread(this.getTarget());
@@ -135,7 +151,7 @@ public class Instuctions {
                 scheduler.schedule();
             }
             case UseDevice -> {
-                deviceManager.useDevice(this.getTarget(),this.currentProcess.getPid());
+                deviceManager.useDevice(this.getTarget(), this.currentProcess.getPid());
             }
             case ReleaseDevice -> {
                 deviceManager.releaseDevice(this.getTarget());
@@ -143,16 +159,16 @@ public class Instuctions {
         }
 
     }
-        public void excuteWithTime(int timing){
-//          block thread to   wait for time
-            try {
-                Thread.sleep(timing * 1000L);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            excute();
 
+    public void excuteWithTime(int timing) {
+        // block thread to wait for time
+        try {
+            Thread.sleep(timing * 1000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
+        excute();
 
+    }
 
 }

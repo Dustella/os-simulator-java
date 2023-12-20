@@ -1,6 +1,5 @@
 package com.os.models;
 
-
 import com.os.core.OS;
 import com.os.utils.Logger;
 import javafx.util.Pair;
@@ -9,9 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-
-
 
 public class Process {
 
@@ -25,14 +21,11 @@ public class Process {
 
     private int timeLeftInCurrentInstruction;
 
-
     private int pc = 0;
 
-    private Map<String, Pair<Integer,Integer>> memoryMapping = new HashMap<>();
-
+    private Map<String, Pair<Integer, Integer>> memoryMapping = new HashMap<>();
 
     private List<String> openingFiles = new LinkedList<>();
-
 
     private List<String> usingDevices = new LinkedList<>();
 
@@ -58,9 +51,13 @@ public class Process {
         }
     }
 
-    //    add pc
+    // add pc
     public void addPc() {
         this.pc++;
+    }
+
+    public List<Instuctions> getInstructions() {
+        return instructions;
     }
 
     public ProcessResult runWithTime(int time) {
@@ -87,8 +84,7 @@ public class Process {
             currentInstruction.excute();
             timeLeft = timeLeft - timeNeed;
             addPc();
-        }
-        while (pc < instructions.size());
+        } while (pc < instructions.size());
 
         return ProcessResult.Done;
     }
@@ -119,9 +115,12 @@ public class Process {
         return size;
     }
 
-
     public String getName() {
         return this.name;
+    }
+
+    public boolean isComplete() {
+        return pc >= instructions.size() - 1;
     }
 
     public void setName(String name) {

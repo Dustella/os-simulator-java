@@ -28,24 +28,22 @@ public class MainFrame extends JFrame {
 
     private DevicePannel devicePannel;
 
-
     public MainFrame() {
         setTitle("OS 模拟器");
         setSize(1300, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // 创建一个字符串列表模型
-//        DefaultListModel<String> deviceList = new DefaultListModel<>();
-//        list1 = new JList<>(deviceList);
-//        JScrollPane listScrollPane1 = new JScrollPane(list1);
-//
-//        DefaultListModel<String> fileList = new DefaultListModel<>();
-//        list2 = new JList<>(fileList);
-//        JScrollPane listScrollPane2 = new JScrollPane(list2);
+        // DefaultListModel<String> deviceList = new DefaultListModel<>();
+        // list1 = new JList<>(deviceList);
+        // JScrollPane listScrollPane1 = new JScrollPane(list1);
+        //
+        // DefaultListModel<String> fileList = new DefaultListModel<>();
+        // list2 = new JList<>(fileList);
+        // JScrollPane listScrollPane2 = new JScrollPane(list2);
         devicePannel = new DevicePannel();
         var devicePane = devicePannel.getDevicePane();
         var filePane = devicePannel.getFilePane();
-
 
         // 创建一个表格模型
         processPannel = new ProcessPannel();
@@ -95,11 +93,11 @@ public class MainFrame extends JFrame {
     public void mainLoop() {
         while (true) {
             try {
-                Thread.sleep(500);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-//            log
+            // log
             flushInfo();
         }
     }
@@ -110,7 +108,7 @@ public class MainFrame extends JFrame {
 
     public static void main(String[] args) {
         var example = MainFrame.getInstance();
-//        invoke later
+        // invoke later
         SwingUtilities.invokeLater(() -> {
 
             example.setVisible(true);
@@ -118,5 +116,3 @@ public class MainFrame extends JFrame {
         example.mainLoop();
     }
 }
-
-

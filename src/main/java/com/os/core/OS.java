@@ -16,6 +16,8 @@ public class OS {
 
     private DeviceManager deviceManager;
 
+    private PipeManager pipeManager;
+
     public static OS getInstance() {
         if (instance == null) {
             instance = new OS();
@@ -28,10 +30,11 @@ public class OS {
         var scheduler = new Scheduler();
         scheduler.setScheduleAlgorithm(new RR(2));
         scheduler.schedule();
-        memoryManager = new MemoryManager(10,2);
+        memoryManager = new MemoryManager(24, 2);
         threadManager = new ThreadManager();
         diskManager = new DiskManager();
         deviceManager = new DeviceManager();
+        pipeManager = new PipeManager();
         this.scheduler = scheduler;
     }
 
@@ -57,5 +60,9 @@ public class OS {
 
     public DeviceManager getDeviceManager() {
         return deviceManager;
+    }
+
+    public PipeManager getPipeManager() {
+        return pipeManager;
     }
 }

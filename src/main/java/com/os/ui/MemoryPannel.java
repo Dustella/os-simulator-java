@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MemoryPannel extends JPanel {
 
-    public static final int PAGE_COUNT = 10;
+    public static final int PAGE_COUNT = 9;
     private int[] memoryStatus;
 
     public MemoryPannel() {
@@ -18,7 +18,7 @@ public class MemoryPannel extends JPanel {
         for (int i = 0; i < PAGE_COUNT; i++) {
             memoryStatus[i] = 0; // 初始状态为0表示空闲
         }
-        setPreferredSize(new Dimension(900, 100));
+        setPreferredSize(new Dimension(1200, 100));
     }
 
     public void setMemoryStatus(int[] memoryStatus) {

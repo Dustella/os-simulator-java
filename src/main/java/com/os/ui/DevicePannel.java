@@ -7,11 +7,11 @@ import java.util.LinkedList;
 
 public class DevicePannel {
 
-    private DefaultListModel<String> deviceListModel;
+    private DefaultListModel<String> pipeListModel;
 
     private DefaultListModel<String> fileListModel;
 
-    private JList<String> deviceList;
+    private JList<String> pipeList;
     private JList<String> fileList;
 
     private JPanel devicePane;
@@ -19,24 +19,23 @@ public class DevicePannel {
     private JPanel filePane;
 
     public DevicePannel() {
-        // TODO
-         deviceListModel = new DefaultListModel<>();
-        deviceList = new JList<>(deviceListModel);
-        JScrollPane listScrollPane1 = new JScrollPane(deviceList);
+        pipeListModel = new DefaultListModel<>();
+        pipeList = new JList<>(pipeListModel);
+        JScrollPane listScrollPane1 = new JScrollPane(pipeList);
 
-         fileListModel = new DefaultListModel<>();
+        fileListModel = new DefaultListModel<>();
         fileList = new JList<>(fileListModel);
         JScrollPane listScrollPane2 = new JScrollPane(fileList);
 
-        JPanel _devicePane = new JPanel();
-        JLabel label1 = new JLabel("设备");
+        JPanel _pipePane = new JPanel();
+        JLabel label1 = new JLabel("管道(进程通信)");
         label1.setFont(new java.awt.Font("微软雅黑", 1, 20));
         label1.setHorizontalAlignment(SwingConstants.CENTER);
         label1.setSize(800, 100);
 
-        _devicePane.setLayout(new BoxLayout(_devicePane, BoxLayout.Y_AXIS));
-        _devicePane.add(label1);
-        _devicePane.add(listScrollPane1);
+        _pipePane.setLayout(new BoxLayout(_pipePane, BoxLayout.Y_AXIS));
+        _pipePane.add(label1);
+        _pipePane.add(listScrollPane1);
 
         JPanel _filePane = new JPanel();
         JLabel label2 = new JLabel("文件");
@@ -48,7 +47,7 @@ public class DevicePannel {
         _filePane.add(label2);
         _filePane.add(listScrollPane2);
 
-        devicePane = _devicePane;
+        devicePane = _pipePane;
         filePane = _filePane;
 
     }
@@ -62,21 +61,13 @@ public class DevicePannel {
     }
 
     public void updateDeviceList() {
-        deviceListModel.clear();
+        pipeListModel.clear();
         var os = OS.getInstance();
-        var deviceMan = os.getDeviceManager();
-        var devicesRaw = deviceMan.getDeviceMap();
-        var devices = new LinkedList<String>();
-        for (var device : devicesRaw.entrySet()) {
-            if (device.getValue()) {
-                var message = device.getValue()? "正在使用" : "空闲";
-                devices.add(device.getKey() + " " + message);
-            }
-        }
+        var pipeMan = os.getPipeManager();
+        var info = pipeMan.getStatus();
 
-
-        for (String device : devices) {
-            deviceListModel.addElement(device);
+        for (String line : info) {
+            pipeListModel.addElement(line);
         }
     }
 
@@ -106,20 +97,18 @@ public class DevicePannel {
         }
 
         var de = deviceMan.getDeviceMap();
-        deviceListModel.clear();
+        pipeListModel.clear();
         for (var device : de.entrySet()) {
-            var message = device.getValue()? "正在使用" : "空闲";
-            deviceListModel.addElement(device.getKey() + " " + message);
+            var message = device.getValue() ? "正在使用" : "空闲";
+            pipeListModel.addElement(device.getKey() + " " + message);
         }
 
-
-
-//        fileListModel.clear();
-//        var os = OS.getInstance();
-//        var fileMan = os.getDiskManager();
-//
-//        for (String file : files) {
-//            fileListModel.addElement(file);
-//        }
+        // fileListModel.clear();
+        // var os = OS.getInstance();
+        // var fileMan = os.getDiskManager();
+        //
+        // for (String file : files) {
+        // fileListModel.addElement(file);
+        // }
     }
 }
